@@ -9,19 +9,18 @@ class GViz
     
     def output
       @@buffer = ""
-      
     end
 
-    def graph(type, mapping, data)
+    def add_graph(type, data, mapping, options= {})
       @@viz_package_names.add(type)
-      @graphs << new(type, mapping, data)
+      @@graphs << new(type, data, mapping, options)
     end
     
     def load_google_js
       api_key = @@config[:api_key].nil? ? "" : "?key=#{@@config[:api_key]}" 
-      @@buffer << <<-EVAL
+      @@buffer << <<-SCRIPT
         <script type="text/javascript" src="http://www.google.com/jsapi#{api_key}"></script>
-      EVAL
+      SCRIPT
     end
     
     def load_packages
@@ -29,7 +28,19 @@ class GViz
         google.load('visualization', '1', {'packages':[#{@@viz_package_names.map{|p|p.downcase}.join(',')}]});  
       SCRIPT
     end
-  
+    
+    def write_draw_function
+      @@buffer << <<-SCRIPT
+        google.setOnLoadCallback(drawChart);
+        function drawChart() {
+          var data = new google.visualization.DataTable();  
+        
+        }
+      SCRIPT
+    end
+    
+    
+    
     def google_data_type(value)
       if value.is_a?(Numeric)
         data_type = 'numeric'
@@ -66,17 +77,19 @@ class GViz
       return value
     end
   end
-    
-  def initialize(type, data, map)
+
+  def initialize(type, data, map, options = {})
     @type = type
     @map = map
     @data = data
     @data_type = {}
+    @options = options
     import_data_types
   end
   
   def import_data_types
     first_row = @data.first
+    puts first_row.inspect
     @map.each do |k, v|
       @data_type[k] = self.class.google_data_type(first_row[k])
     end
@@ -101,5 +114,7 @@ class GViz
       end
     end
   end
+  
+  
   
 end

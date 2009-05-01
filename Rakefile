@@ -15,5 +15,5 @@ desc "Run all tests"
 Spec::Rake::SpecTask.new  do |t|
   t.libs = [File.join(File.dirname(__FILE__), 'lib', 'g_viz')]
   t.fail_on_error = false
-  t.spec_files = FileList['specs/*.rb']
+  t.spec_files = FileList['spec/*.rb']
 end

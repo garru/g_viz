@@ -1,46 +1,52 @@
 require 'set'
 require 'date'
+require 'erb'
+require 'json'
 class GViz
   @@viz_package_names = Set.new
   @@config = {}
   @@graphs = []
-    
+  @@template_name = File.join(File.dirname(__FILE__), 'templates', 'visualization.erb')  
   class << self
     
+    # <script type='text/javascript' src='http://www.google.com/jsapi<%= @api_key %>'></script>
+    # <script type='text/javascript'>
+    #   google.load('visualization', '1', {'packages':[<%= @@viz_package_names.map{|p|p.downcase}.join(',') %>]});
+    #   google.setOnLoadCallback(drawChart);
+    #   function drawChart() {    
+    #     <% @graphs.each do |graph| %>
+    #       var <%= graph.data_name%> = new google.visualization.DataTable();
+    # 
+    #       <% graph.columns.each do |column| %>
+    #         <%= graph.data_name%>.addColumn('<%= column[0] %>', '<%= column[1] %>')
+    #       <% end %>
+    # 
+    #       <%= graph.data_name%>.addRows(<%= graph.size %>)
+    # 
+    #       <% graph.rows.each_with_index do |row, i| %>
+    #         <% row.each_with_index do |value, j| %>
+    #           <%= graph.data_name%>.setValue(<%= i %>, <%= j %>, value)
+    #         <% end %> 
+    #       <% end %>
+    #     <% end %>
+    #     var chart_<%= graph.data_name%> = new google.visualization.<%=graph.chart_type%>(document.getElementById('<%=graph.chart_id%>'));
+    #     chart.draw(data, <%=graph.options%>);
+    #   }
+    # </script>
+    
     def output
-      @@buffer = ""
+      b = binding
+      rhtml = ERB.new(IO.read(@@template_name), 0, "-")
+      @output = rhtml.result(b) 
+      return @output
     end
 
     def add_graph(type, data, mapping, options= {})
       @@viz_package_names.add(type)
-      @@graphs << new(type, data, mapping, options)
+      new_graph = new(type, data, mapping, @@graphs.size, options)
+      @@graphs << new_graph
     end
-    
-    def load_google_js
-      api_key = @@config[:api_key].nil? ? "" : "?key=#{@@config[:api_key]}" 
-      @@buffer << <<-SCRIPT
-        <script type="text/javascript" src="http://www.google.com/jsapi#{api_key}"></script>
-      SCRIPT
-    end
-    
-    def load_packages
-      @@buffer << <<-SCRIPT
-        google.load('visualization', '1', {'packages':[#{@@viz_package_names.map{|p|p.downcase}.join(',')}]});  
-      SCRIPT
-    end
-    
-    def write_draw_function
-      @@buffer << <<-SCRIPT
-        google.setOnLoadCallback(drawChart);
-        function drawChart() {
-          var data = new google.visualization.DataTable();  
         
-        }
-      SCRIPT
-    end
-    
-    
-    
     def google_data_type(value)
       if value.is_a?(Numeric)
         data_type = 'numeric'
@@ -70,36 +76,51 @@ class GViz
       if type == 'string'
         value = "'#{value}'"
       elsif type == 'date'
-        value = Date.parse(value.to_s)
+        temp_d = Date.parse(value.to_s)
+        value = "new Date(#{temp_d.year}, #{temp_d.month - 1}, #{temp_d.day})"
       elsif type == 'datetime'
-        value = DateTime.parse(value.to_s)
+        temp_d DateTime.parse(value.to_s)
+        value = "new Date(#{temp_d.year}, #{temp_d.month - 1}, #{temp_d.day}, #{temp_d.hour}, #{temp_d.min}, #{temp_d.sec})"
       end
       return value
     end
   end
-
-  def initialize(type, data, map, options = {})
+  
+  attr_reader :type, :options
+  
+  def initialize(type, data, map, id = 0, options = {})
     @type = type
     @map = map
     @data = data
     @data_type = {}
     @options = options
+    @id = id
     import_data_types
   end
   
   def import_data_types
-    first_row = @data.first
-    puts first_row.inspect
-    @map.each do |k, v|
-      @data_type[k] = self.class.google_data_type(first_row[k])
+    not_all_data_types_found = true
+    find_data_types = @map.dup
+  
+    @data.each do |x|
+      break if find_data_types.size == 0
+      find_data_types.each do |k, v|
+        if x.key?(k)
+          @data_type[k] = self.class.google_data_type(x[k]) 
+          find_data_types.delete([k,v])
+        end
+      end
     end
+    
+    # if there is no data that responds to a mapped value, remove that mapping
+    @map -= find_data_types 
+    
   end
   
   
   def columns
-    first_row = @data.first
     data = @map.map do |k, v|
-      [self.class.google_data_type(first_row[k]), v]
+      [@data_type[k], v]
     end
   end
   
@@ -115,6 +136,11 @@ class GViz
     end
   end
   
+  def chart_id
+    return @type.downcase + @id.to_s
+  end
   
-  
+  def data_name
+    "data_#{@id}"
+  end
 end

@@ -1,8 +1,28 @@
-require File.join(File.dirname(__FILE__), '..', '..', 'lib', 'g_viz', 'g_viz')
+require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 describe GViz do
-  
   describe 'api' do
+    describe 'examples' do
+      
+      describe 'annotated timeline' do
+        @mapping = [[:date, 'Date'],[:sold_pencils, 'Solid Pencils'], [:title1, 'title1'], [:text1, 'text1'], 
+                    [:sold_pens, 'Sold Pens'], [:title2, 'title2'], [:text2, 'text2']]
+
+        @data = [
+          {:date => "2008-01-01", :sold_pencils => 30000, :sold_pens => 40645},
+          {:date => Date.parse("2008-01-02"), :sold_pencils => 14045, :sold_pens => 20374},
+          {:date => Date.parse("2008-01-03"), :sold_pencils => 55022, :sold_pens => 50766},
+          {:date => Date.parse("2008-01-04"), :sold_pencils => 75284, :sold_pens => 14334, :title2 => 'Out of Stock',:text2 => 'Ran out of stock on pens at 4pm'},
+          {:date => Date.parse("2008-01-05"), :sold_pencils => 41476, :sold_pens => 66467, :title1 => 'Bought Pens',:text2 => 'Bought 200k pens'},
+          {:date => Date.parse("2008-01-06"), :sold_pencils => 33322, :sold_pens => 39463, :title1 => 'Bought Pens',:text2 => 'Bought 200k pens'}
+        ]
+        GViz.add_graph('AnnotatedTimeline', @data, @mapping)
+        output = GViz.output
+        puts output
+        output.should == TestHelper.template('rendered_annotated_timeline')
+      end
+    end
+    
     describe 'graph' do
       @games = [{:name => "Gary", :games_won => "2", :birthday => "2008-02-01"},
                {:name => "John", :games_won => "4", :birthday => Date.parse("2009-01-01 11:11")},
@@ -27,6 +47,15 @@ describe GViz do
         GViz.google_data_type("a12312412").should == 'date'
       end
     end
+
+    describe 'ruby_to_js' do
+      it "should return the js string representation of that data " do
+        GViz.ruby_to_js('numeric', 12341234).should == 12341234 
+        GViz.ruby_to_js('string', 12341234).should == "'12341234'"
+        GViz.ruby_to_js('date', "June 23 1982").should == "new Date(1982, 5, 23)"
+        GViz.ruby_to_js('date', Date.parse("June 23 1982")).should == "new Date(1982, 5, 23)"
+      end
+    end
   end
   
   describe 'implmentation details - instances methods' do
@@ -35,12 +64,13 @@ describe GViz do
                {:name => "John", :games_won => "4", :birthday => Date.parse("2009-01-01 11:11")},
                {:name => "A", :games_won => "2", :birthday => "Jun 14 1982"}]
                
-      @rows = [["'Gary'", "2", Date.parse("2008-02-01")],
-               ["'John'", "4", Date.parse("2009-01-01")],
-               ["'A'", "2", Date.parse("1982-06-14")]]
+      @rows = [["'Gary'", "2", "new Date(2008, 1, 1)"],
+               ["'John'", "4", "new Date(2009, 0, 1)"],
+               ["'A'", "2", "new Date(1982, 5, 14)"]]
                
       @gviz = GViz.send(:new, 'bar', @games, [[:name, "Name"], [:games_won, "Games Won"], [:birthday, 'Birthday']])
     end
+    
     describe 'columns' do
       it 'should return google data types and labels' do
         @gviz.columns.should == [['string', 'Name'], ['numeric', 'Games Won'], ['date', 'Birthday']]

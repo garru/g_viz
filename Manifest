@@ -1,6 +1,10 @@
 CHANGELOG
 lib/g_viz/g_viz.rb
+lib/g_viz/templates/visualization.erb
+Manifest
 Rakefile
 README
-spec/g_viz_base.rb
-Manifest
+spec/g_viz/fixtures/annotated_timeline.rb
+spec/g_viz/g_viz_spec.rb
+spec/g_viz/templates/rendered_annotated_timeline.html
+spec/test_helper.rb

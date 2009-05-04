@@ -45,6 +45,7 @@ class GViz
       @@viz_package_names.add(type)
       new_graph = new(type, data, mapping, @@graphs.size, options)
       @@graphs << new_graph
+      return new_graph.chart_id
     end
         
     def google_data_type(value)

@@ -2,15 +2,15 @@
 
 Gem::Specification.new do |s|
   s.name = %q{g_viz}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Gary Tsang"]
   s.date = %q{2009-05-04}
   s.description = %q{Ruby Scribe Client. Package and Wrapper for generated ruby interfaces}
   s.email = %q{}
-  s.extra_rdoc_files = ["CHANGELOG", "lib/g_viz/g_viz.rb", "lib/g_viz/templates/visualization.erb", "README"]
-  s.files = ["CHANGELOG", "lib/g_viz/g_viz.rb", "lib/g_viz/templates/visualization.erb", "Manifest", "Rakefile", "README", "spec/g_viz/fixtures/annotated_timeline.rb", "spec/g_viz/g_viz_spec.rb", "spec/g_viz/templates/rendered_annotated_timeline.html", "spec/test_helper.rb", "g_viz.gemspec"]
+  s.extra_rdoc_files = ["CHANGELOG", "lib/g_viz/g_viz.rb", "lib/g_viz/graph.rb", "lib/g_viz/templates/visualization.erb", "lib/g_viz.rb", "README"]
+  s.files = ["CHANGELOG", "lib/g_viz/g_viz.rb", "lib/g_viz/graph.rb", "lib/g_viz/templates/visualization.erb", "lib/g_viz.rb", "Manifest", "Rakefile", "README", "spec/g_viz/fixtures/annotated_timeline.rb", "spec/g_viz/g_viz_spec.rb", "spec/g_viz/templates/rendered_annotated_timeline.html", "spec/test_helper.rb", "g_viz.gemspec"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/garru/GViz}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "G_viz", "--main", "README"]

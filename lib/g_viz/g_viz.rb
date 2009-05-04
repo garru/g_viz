@@ -73,6 +73,7 @@ class GViz
     end
   
     def ruby_to_js(type, value)
+      return nil if value.nil?
       if type == 'string'
         value = "'#{value}'"
       elsif type == 'date'

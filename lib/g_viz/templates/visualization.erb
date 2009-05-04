@@ -5,22 +5,20 @@
   function drawChart() {    
     <%- @@graphs.each do |graph| -%>
       var <%= graph.data_name%> = new google.visualization.DataTable();
-
-      <%= graph.inspect %>
-      <%- graph.columns.each do |column| -%>
-        <%= graph.data_name%>.addColumn('<%= column[0] %>', '<%= column[1] %>')
-      <%- end -%>
-
-          <%= graph.data_name%>.addRows(<%= graph.size %>)
+    <%- graph.columns.each do |column| -%>
+      <%= graph.data_name%>.addColumn('<%= column[0] %>', '<%= column[1] %>')
+    <%- end -%>
+      <%= graph.data_name%>.addRows(<%= graph.size %>)
       <%- graph.rows.each_with_index do |row, i| 
             row.each_with_index do |value, j|
+              next if value.nil?
         -%>
-          <%= graph.data_name%>.setValue(<%= i %>, <%= j %>, <%= value %>)
+      <%= graph.data_name%>.setValue(<%= i %>, <%= j %>, <%= value %>)
       <%- 
           end
         end -%>
       var chart_<%= graph.data_name %> = new google.visualization.<%= graph.type %>(document.getElementById('<%= graph.chart_id %>'));
-      chart.draw(data, <%=graph.options.to_json%>);
+      chart.draw(<%= graph.data_name%>, <%=graph.options.to_json%>);
     <%- end -%>
   }
 </script>

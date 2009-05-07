@@ -1,5 +1,5 @@
 require 'rubygems'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'g_viz', 'g_viz')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'g_viz')
 
 class TestHelper
   def self.template(name)

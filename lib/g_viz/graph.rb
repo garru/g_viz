@@ -2,12 +2,13 @@ module GViz
   class Graph
     attr_reader :type, :options
 
-    def initialize(type, data, map, id = 0, options = {})
+    def initialize(type, data, map, id = 0, options = {}, extra_options = {})
       @type = type
       @map = map
       @data = data
       @data_type = {}
       @options = options
+      @extra_options = extra_options
       @id = id
       import_data_types
     end
@@ -43,7 +44,7 @@ module GViz
     def rows
       @data.map do |value|
         @map.map do |k, v|
-          self.class.ruby_to_js(@data_type[k], value[k])
+          self.class.ruby_to_js(@data_type[k], value[k], @extra_options['prune'])
         end
       end
     end
@@ -82,8 +83,8 @@ module GViz
         data_type
       end
 
-      def ruby_to_js(type, value)
-        return nil if value.nil?
+      def ruby_to_js(type, value, prune = false)
+        return nil if value.nil? && prune
         if type == 'string'
           value = "'#{value}'"
         elsif type == 'date'

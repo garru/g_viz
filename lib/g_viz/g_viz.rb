@@ -17,9 +17,9 @@ module GViz
       return @output
     end
 
-    def add_graph(type, data, mapping, options= {})
+    def add_graph(type, data, mapping, options= {}, extra_options = {})
       @viz_package_names.add(type)
-      new_graph = GViz::Graph.new(type, data, mapping, @graphs.size, options)
+      new_graph = GViz::Graph.new(type, data, mapping, @graphs.size, options, extra_options)
       @graphs << new_graph
       return new_graph.chart_id
     end

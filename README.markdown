@@ -89,5 +89,5 @@ You can add multiple visualizations
   }
 </script>
 <div id='annotatedtimeline0'></div>
-
+<script src="http://gist.github.com/108528.js"></script>
 

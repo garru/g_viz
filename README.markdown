@@ -4,21 +4,39 @@ GViz is a simple Ruby wrapper for the Google Visualization API
 
 ## Usage
 
+### Definitions
+<dl>
+  <dt>chart_type</dt>
+  <dd>Google Visualization Chart Constructor</dd>
+  <dt>data</dt>
+  <dd>An array of objects that responds to [](key) i.e. and array of Hashes</dd>
+  <dt>mapping</dt>
+  <dd>An array of key, description pairs that we are using as data points for our chart</dd>
+</dl>
+
 GViz::Base keeps track of charts that need to be rendered.
 
     chart = GViz::Base.new
-    dom_id = chart.add_graph(graph_type, data, mapping, config_options)
+    dom_id = chart.add_graph(chart_type, data, mapping, config_options)
     chart.output
 
 You can add multiple visualizations
 
     chart = GViz::Base.new
-    dom_id1 = chart.add_graph(graph_type, data, mapping, config_options)
-    dom_id2 = chart.add_graph(graph_type, data, mapping, config_options)
+    dom_id1 = chart.add_graph(chart_type, data, mapping, config_options)
+    dom_id2 = chart.add_graph(chart_type, data, mapping, config_options)
+    chart.output
+    
+You can use dynamic adders
+    
+    #chart_type for dynamic adders are lowercased and underscored
+    chart = GViz::Base.new
+    dom_id1 = chart.add_chart_type(data, mapping, config_options)
     chart.output
 
-
+## Examples
 ### AnnotatedTimeLine
+
     mapping = [[:date, 'Date'],[:sold_pencils, 'Solid Pencils'], [:title1, 'title1'], [:text1, 'text1'], 
               [:sold_pens, 'Sold Pens'], [:title2, 'title2'], [:text2, 'text2']]
 
@@ -34,7 +52,7 @@ You can add multiple visualizations
     g = GViz::Base.new
     chart_id = g.add_annotated_time_line(data, mapping)
     puts g.output
-    puts "<div id='#{chart_id}"></div>
+    puts "<div id='#{chart_id}'></div>"
     
 Outputs
 

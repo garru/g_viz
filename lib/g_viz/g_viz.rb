@@ -25,7 +25,6 @@ module GViz
     end
     
     def method_missing(name, *args)
-      puts name
       if name.to_s.match(/add_/)
         type = name.to_s.gsub(/add_/){""}.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }
         return add_graph(type, *args)

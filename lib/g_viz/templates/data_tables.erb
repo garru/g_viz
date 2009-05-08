@@ -1,0 +1,31 @@
+<script type='text/javascript' src='http://www.google.com/jsapi<%= @api_key %>'></script>
+<script type='text/javascript'>
+  google.load('visualization', '1', {'packages':[<%= @viz_package_names.map{|p|"'" + p.downcase + "'"}.join(',') -%>]});
+  google.setOnLoadCallback(drawChart);
+  
+  
+  function createDataTable(data_pkg, columns){
+    var dataTable = new google.visualization.DataTable();
+    for(column in columns){
+      dataTable.addColumn(data_pkg['columns'][column][0], data_pkg['columns'][column][1]); 
+    }
+    
+    dataTable.addRows(data_pkg['data'].size);
+    for(var i = 0; i < data_pkg['data'].size; ++i){
+      for(var j = 0; j < columns.size; ++j){
+        dataTable.setValue(i, j, data_pkg['data'][i][columns[j][1]]);
+      }
+    }
+  }
+  
+  <%- @graphs.each do |graph| -%>
+    var <%= graph.data_name%> = <%= graph.to_json%>;
+  <%- end -%
+  
+  function drawChart() {    
+    <%- @graphs.each do |graph| -%>
+      var chart_<%= graph.data_name %> = new google.visualization.<%= graph.type %>(document.getElementById('<%= graph.chart_id %>'));
+      chart_<%= graph.data_name %>.draw(<%= graph.data_name%>, <%=graph.options.to_json%>);
+    <%- end -%>
+  }
+</script>

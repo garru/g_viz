@@ -7,15 +7,15 @@
   function createDataTable(data_pkg, columns){
     var dataTable = new google.visualization.DataTable();
     for(column in columns){
-      if(data_pkg['columns'][column] != undefined){
-        dataTable.addColumn(data_pkg['columns'][column][0], data_pkg['columns'][column][1]);
+      if(data_pkg['columns'][columns[column]] != undefined){
+        dataTable.addColumn(data_pkg['columns'][columns[column]], columns[column]);
       } 
     }
     
-    dataTable.addRows(data_pkg['data'].size);
-    for(var i = 0; i < data_pkg['data'].size; ++i){
-      for(var j = 0; j < columns.size; ++j){
-        dataTable.setValue(i, j, data_pkg['data'][i][columns[j][1]]);
+    dataTable.addRows(data_pkg['data'].length);
+    for(var i = 0; i < data_pkg['data'].length; ++i){
+      for(var j = 0; j < columns.length; ++j){
+        dataTable.setValue(i, j, data_pkg['data'][i][columns[j]]);
       }
     }
     return dataTable;

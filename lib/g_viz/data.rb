@@ -55,7 +55,7 @@ module GViz
     def to_json
       @json ||= begin
         {
-          :columns => columns,
+          :columns => columns.inject({}){|hash, (k,v)| hash[v] = k; hash},
           :data => rows_hash
         }.to_json
       end

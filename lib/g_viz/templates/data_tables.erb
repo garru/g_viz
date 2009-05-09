@@ -7,7 +7,9 @@
   function createDataTable(data_pkg, columns){
     var dataTable = new google.visualization.DataTable();
     for(column in columns){
-      dataTable.addColumn(data_pkg['columns'][column][0], data_pkg['columns'][column][1]); 
+      if(data_pkg['columns'][column] != undefined){
+        dataTable.addColumn(data_pkg['columns'][column][0], data_pkg['columns'][column][1]);
+      } 
     }
     
     dataTable.addRows(data_pkg['data'].size);
@@ -16,16 +18,14 @@
         dataTable.setValue(i, j, data_pkg['data'][i][columns[j][1]]);
       }
     }
+    return dataTable;
   }
   
-  <%- @graphs.each do |graph| -%>
-    var <%= graph.data_name%> = <%= graph.to_json%>;
-  <%- end -%
+  <%- @datas.each do |k, data| -%>
+    var <%= data.data_name %> = <%= data.to_json %>;
+  <%- end -%>
   
   function drawChart() {    
-    <%- @graphs.each do |graph| -%>
-      var chart_<%= graph.data_name %> = new google.visualization.<%= graph.type %>(document.getElementById('<%= graph.chart_id %>'));
-      chart_<%= graph.data_name %>.draw(<%= graph.data_name%>, <%=graph.options.to_json%>);
-    <%- end -%>
+    <%= @visualizations %>
   }
 </script>

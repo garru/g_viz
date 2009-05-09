@@ -1,12 +1,10 @@
 module GViz
-  class DataTable
+  class Data
     
-    def initialize(data, map, options = {})
-      @type = type
+    def initialize(data, map)
       @map = map
       @data = data
       @data_type = {}
-      @options = options
       import_data_types
     end
 
@@ -47,8 +45,9 @@ module GViz
 
     def rows_hash(prune = false)
       @data.map do |value|
-        @map.inject({}) do |hash, k, v|
-          hash[v] = self.class.ruby_to_js(@data_type[k], value[k], prune)
+        @map.inject({}) do |maps, (k, v)|
+          maps[v] = self.class.ruby_to_js(@data_type[k], value[k], prune)
+          maps
         end
       end
     end
@@ -56,10 +55,14 @@ module GViz
     def to_json
       @json ||= begin
         {
-          :columns => @columns,
-          :data => rows_hash 
+          :columns => columns,
+          :data => rows_hash
         }.to_json
       end
+    end
+    
+    def data_name
+      "data_#{@data.object_id}"
     end
     
     class << self    
@@ -91,13 +94,11 @@ module GViz
       def ruby_to_js(type, value, prune = false)
         return nil if value.nil? && prune
         if type == 'string'
-          value = "'#{value}'"
+          value = "#{value}"
         elsif type == 'date'
-          temp_d = Date.parse(value.to_s)
-          value = "new Date(#{temp_d.year}, #{temp_d.month - 1}, #{temp_d.day})"
+          value = Date.parse(value.to_s)
         elsif type == 'datetime'
-          temp_d = DateTime.parse(value.to_s)
-          value = "new Date(#{temp_d.year}, #{temp_d.month - 1}, #{temp_d.day}, #{temp_d.hour}, #{temp_d.min}, #{temp_d.sec})"
+          value = DateTime.parse(value.to_s)
         end
         return value
       end

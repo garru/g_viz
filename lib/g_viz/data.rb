@@ -9,20 +9,19 @@ module GViz
     end
 
     def import_data_types
-      find_data_types = @map.dup
-
+      found_data_types = Set.new
       @data.each do |x|
-        break if find_data_types.size == 0
-        find_data_types.each do |k, v|
+        break if found_data_types.size == @map.size
+        @map.each do |k, v|
+          next if found_data_types.member?(k)
           if x[k]
             @data_type[k] = self.class.google_data_type(x[k]) 
-            find_data_types.delete([k,v])
+            found_data_types.add([k,v])
           end
         end
       end
-
       # if there is no data that responds to a mapped value, remove that mapping
-      @map -= find_data_types  
+      @map -= (@map - found_data_types.to_a)  
     end
 
     def columns

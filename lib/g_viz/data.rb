@@ -26,7 +26,7 @@ module GViz
 
     def columns
       data = @map.map do |k, v|
-        [@data_type[k], v]
+        [@data_type[k], k]
       end
     end
 
@@ -45,7 +45,7 @@ module GViz
     def rows_hash(prune = false)
       @data.map do |value|
         @map.inject({}) do |maps, (k, v)|
-          maps[v] = self.class.ruby_to_js(@data_type[k], value[k], prune)
+          maps[k] = self.class.ruby_to_js(@data_type[k], value[k], prune)
           maps
         end
       end
@@ -98,8 +98,10 @@ module GViz
           value = Date.parse(value.to_s)
         elsif type == 'datetime'
           value = DateTime.parse(value.to_s)
+        elsif type == 'number'
+          value = value.to_s.match(/\./) ? value.to_f : value.to_i
         end
-        return value
+        return value 
       end
     end
   end

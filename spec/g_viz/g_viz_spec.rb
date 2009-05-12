@@ -18,7 +18,7 @@ describe GViz do
         ]
         g = GViz::Base.new
         g.add_data(@data, @mapping)
-        g.add_graph('AnnotatedTimeLine', 'chart_id', @data, ['Date', 'Sold Pencils', 'title1', 'text1', 'Sold Pens', 'title2', 'text2'], {:displayAnnotations =>  true})
+        g.add_graph('AnnotatedTimeLine', 'chart_id', @data, [:date, :sold_pencils, :tilte1, :text1, :sold_pens, :title2, :text2], {:displayAnnotations =>  true})
         output = g.output
         puts output
         output.should == TestHelper.template('rendered_annotated_timeline')

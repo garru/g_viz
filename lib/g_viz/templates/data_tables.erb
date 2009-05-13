@@ -16,7 +16,7 @@
     dataTable.addRows(data.length);
     for(var i = 0; i < data.length; ++i){
       for(var j = 0; j < _columns.length; ++j){
-        if(data[i][_columns[j]] != undefined && data[i][_columns[j]] != ''){
+        if(data[i][_columns[j]] != undefined){
           dataTable.setValue(i, j, data[i][_columns[j]]);
         }
       }

@@ -1,2 +1,3 @@
+v0.0.3 separated data table from graph to make it more powerful.
 v0.0.2 this version is usable.  Introduced graph.add_(graph_name) semantic sugar.
 v0.0.1 making this a gem

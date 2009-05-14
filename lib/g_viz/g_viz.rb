@@ -1,5 +1,4 @@
 require File.join(File.dirname(__FILE__), 'data')
-require File.join(File.dirname(__FILE__), 'visualization')  
 require File.join(File.dirname(__FILE__), 'json_google')  
 
 module GViz

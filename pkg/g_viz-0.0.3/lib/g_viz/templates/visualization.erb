@@ -1,0 +1,24 @@
+<script type='text/javascript' src='http://www.google.com/jsapi<%= @api_key %>'></script>
+<script type='text/javascript'>
+  google.load('visualization', '1', {'packages':[<%= @viz_package_names.map{|p|"'" + p.downcase + "'"}.join(',') -%>]});
+  google.setOnLoadCallback(drawChart);
+  function drawChart() {    
+    <%- @graphs.each do |graph| -%>
+      var <%= graph.data_name%> = new google.visualization.DataTable();
+    <%- graph.columns.each do |column| -%>
+      <%= graph.data_name%>.addColumn('<%= column[0] %>', '<%= column[1] %>')
+    <%- end -%>
+      <%= graph.data_name%>.addRows(<%= graph.size %>)
+      <%- graph.rows.each_with_index do |row, i| 
+            row.each_with_index do |value, j|
+              next if value.nil?
+        -%>
+      <%= graph.data_name%>.setValue(<%= i %>, <%= j %>, <%= value %>)
+      <%- 
+          end
+        end -%>
+      var chart_<%= graph.data_name %> = new google.visualization.<%= graph.type %>(document.getElementById('<%= graph.chart_id %>'));
+      chart_<%= graph.data_name %>.draw(<%= graph.data_name%>, <%=graph.options.to_json%>);
+    <%- end -%>
+  }
+</script>

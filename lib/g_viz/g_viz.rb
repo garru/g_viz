@@ -33,7 +33,7 @@ module GViz
     def draw_visualization(type, dom_id, data, columns, options = {}, extra_options = {})
       viz_string = <<-STRING
         var chart_#{data.object_id} = new google.visualization.#{type}(document.getElementById('#{dom_id}'));
-        chart_#{data.object_id}.draw(createDataTable(#{@datas[data.object_id].data_name}, #{columns.to_json}), #{options.to_json});
+        chart_#{data.object_id}.draw(createDataTable(#{@datas[data.object_id].data_name}, #{columns.to_json}, #{extra_options[:first_column_title] == true ? 'true' : 'false' }), #{options.to_json});
       STRING
     end
     

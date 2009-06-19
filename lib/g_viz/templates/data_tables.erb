@@ -5,11 +5,14 @@
   google.setOnLoadCallback(drawChart<%= @namespace %>);
   
   
-  function createDataTable(data_pkg, _columns){
+  function createDataTable(data_pkg, _columns, first_column_title){
+    if(typeof(first_column_title) == undefined) first_column_title = false;
     var dataTable = new google.visualization.DataTable();
     var data_columns = data_pkg['columns'];
     for(var j = 0; j < _columns.length; ++j){
-      if(data_columns[_columns[j]] != undefined){
+      if(j == 0 && first_column_title){
+        dataTable.addColumn('string', _columns[j]);
+      }else if(data_columns[_columns[j]] != undefined){
         dataTable.addColumn(data_columns[_columns[j]], _columns[j]);
       } 
     }
@@ -18,7 +21,11 @@
     for(var i = 0; i < data.length; ++i){
       for(var j = 0; j < _columns.length; ++j){
         if(data[i][_columns[j]] != undefined){
-          dataTable.setValue(i, j, data[i][_columns[j]]);
+          if(j == 0 && first_column_title){
+            dataTable.setValue(i, j, String(data[i][_columns[j]]));
+          }else{
+            dataTable.setValue(i, j, data[i][_columns[j]]);
+          }
         }
       }
     }

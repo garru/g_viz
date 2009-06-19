@@ -3,7 +3,6 @@ lib/g_viz/data.rb
 lib/g_viz/g_viz.rb
 lib/g_viz/json_google.rb
 lib/g_viz/templates/data_tables.erb
-lib/g_viz/templates/visualization.erb
 lib/g_viz.rb
 Manifest
 Rakefile

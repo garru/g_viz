@@ -1,15 +1,19 @@
-require 'echoe'
 require 'rake'
 require 'spec/rake/spectask'
 
-Echoe.new('g_viz') do |p|
-  p.project = 'g_viz'
-  p.author = 'Gary Tsang'
-  p.summary = '	Ruby Scribe Client. Package and Wrapper for generated ruby interfaces'
-  p.url = 'http://github.com/garru/GViz'
-  p.development_dependencies = []
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name = "g_viz"
+    gemspec.summary = "Google Visualization API Ruby Client"
+    gemspec.email = "gary.tsang@gmail.com"
+    gemspec.homepage = "http://github.com/garru/g_viz"
+    gemspec.description = "Google Visualization API Ruby Client"
+    gemspec.authors = ["Gary Tsang"]
+  end
+rescue LoadError
+  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
-
 
 desc "Run all tests"
 Spec::Rake::SpecTask.new  do |t|

@@ -34,14 +34,6 @@ module GViz
       @data.size
     end
 
-    # def rows(prune = false)
-    #   @data.map do |value|
-    #     @map.map do |k, v|
-    #       self.class.ruby_to_js(@data_type[k], value[k], prune)
-    #     end
-    #   end
-    # end
-
     def rows_hash(prune = false)
       @data.map do |value|
         @map.inject({}) do |maps, (k, v)|

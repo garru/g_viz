@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{g_viz}
-  s.version = "0.3.0"
+  s.version = "0.3.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Gary Tsang"]
-  s.date = %q{2009-06-19}
+  s.date = %q{2009-11-25}
   s.description = %q{Google Visualization API Ruby Client}
   s.email = %q{gary.tsang@gmail.com}
   s.extra_rdoc_files = [
@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
      "spec/test_helper.rb"
   ]
   s.has_rdoc = true
-  s.homepage = %q{http://github.com/garru/g_viz}
+  s.homepage = %q{http://github.com/JamieFlournoy/g_viz}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.1}

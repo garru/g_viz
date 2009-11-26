@@ -2,7 +2,16 @@
 
 GViz is a simple Ruby wrapper for the Google Visualization API
 
-## Usage
+## Install
+
+    gem install gemcutter
+    gem tumble
+    gem install JamieFlournoy-g_viz -s 
+
+OR
+
+    gem install JamieFlournoy-g_viz --source http://gemcutter.org
+
 
 ### Definitions
 <dl>

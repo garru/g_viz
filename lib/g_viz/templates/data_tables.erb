@@ -1,6 +1,6 @@
 <script type='text/javascript' src='http://www.google.com/jsapi<%= @api_key %>'></script>
 <script type='text/javascript'>
-  
+  // <![CDATA[
   google.load('visualization', '1', {'packages':[<%= @viz_package_names.map{|p|"'" + p.downcase + "'"}.join(',') -%>]});
   google.setOnLoadCallback(drawChart<%= @namespace %>);
   
@@ -39,4 +39,5 @@
   function drawChart<%= @namespace %>() {    
     <%= @visualizations %>
   }
+  // ]]>
 </script>
